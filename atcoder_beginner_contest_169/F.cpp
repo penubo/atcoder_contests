@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+#define MOD 998244353
+
+long long dp[3005][3005];
 
 int main() {
 	ios::sync_with_stdio(0);
@@ -11,9 +14,7 @@ int main() {
 	int cnt = 0;
 	cin >> n >> s;
 	int arr[n+1];
-	bool possible[s+1][n+1];
-	memset(possible, 0, (n+1)*(s+1));
-	possible[0][0] = true;
+	dp[0][0] = 1;
 	for (int i = 1; i <= n; i++) {
 		cin >> x;
 		arr[i] = x;
@@ -21,14 +22,11 @@ int main() {
 
 	for (int k = 1; k <= n; k++) {
 		for (int x = 0; x <= s; x++) {
-			if (x - arr[k] >= 0) possible[x][k] |= possible[x-arr[k]][k-1];
-			possible[x][k] |= possible[x][k-1];
+			dp[x][k] = dp[x][k-1] * 2 % MOD;
+			if (x - arr[k] >= 0) 
+				dp[x][k] = (dp[x][k] + dp[x-arr[k]][k-1]) % MOD;
 		}
 	}
-	for (int k = 1; k <= n; k++) {
-		for (int x = 0; x <= s; x++) {
-			cout << possible[x][k];
-		}cout << "\n";
-	}
-	cout << cnt << "\n";
+
+	cout << dp[s][n] << "\n";
 }
